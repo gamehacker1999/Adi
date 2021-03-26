@@ -19,6 +19,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "PointLight.h"
+
 using namespace std;
 using namespace glm;
 
@@ -55,6 +57,8 @@ public:
     void draw(mat4 viewMat, mat4 projMat, vec3 lightPos, float time);
 
 	void draw(mat4 viewMat, mat4 projMat, vec3 lightPositions[], vec3 ambientValues[], vec3 diffuseValues[], vec3 specularValues[], int coeffValues[], float time, vec3 translation, vec3 scaleVal, vec3 eyePos);
+
+	void draw(mat4 viewMat, mat4 projMat, PointLight lights[], vec3 translation, vec3 scaleVal, vec3 eyePos);
 
 private:
 	void computeNormals(); // compute both face and vertex normals

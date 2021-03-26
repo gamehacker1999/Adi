@@ -26,6 +26,8 @@
 #include "Text.h"
 #include "Mesh.h"
 
+#include "PointLight.h"
+
 #include <iostream>
 using namespace std;
 using namespace glm;
@@ -154,7 +156,21 @@ void display()
 	g_text.draw(10, 45, const_cast<char*>(str.c_str()), g_winWidth, g_winHeight);
 	str = "triangle count: " + std::to_string(g_mesh.tri_num);
 	g_text.draw(10, 60, const_cast<char*>(str.c_str()), g_winWidth, g_winHeight);
-		
+	
+	PointLight lights[2];
+
+	lights[0] = {};
+	lights[0].ambient = vec3(1, 1, 1);
+	lights[0].diffuse = vec3(0.5, 0.5, 0);
+	lights[0].specular = vec3(0.5, 0.5, 0.5);
+	lights[0].position = vec3(0, 0, 0);
+	lights[0].coeff = 20;
+
+	lights[1].ambient = vec3(1, 1, 1);
+	lights[1].diffuse = vec3(0.5, 0.5, 0);
+	lights[1].specular = vec3(0.5, 0.5, 0.5);
+	lights[1].position = vec3(-2, 0, 0);
+	lights[1].coeff = 20;
 
 	g_time = (float)glutGet(GLUT_ELAPSED_TIME)/1000.0f;
 
@@ -163,8 +179,8 @@ void display()
 	glutSolidSphere(1, 50, 50);
 
 	//g_mesh.draw(g_cam.viewMat, g_cam.projMat, g_lightPos, g_time);
-	g_mesh.draw(g_cam.viewMat, g_cam.projMat, pointLightPositions, ambientValues, diffuseValues, specularValues, coeffValues, g_time, vec3(0.0, 2.0, 0.0), vec3(0.5, 0.5, 0.5), vec3(g_cam.eye.x, g_cam.eye.y, g_cam.eye.z));
-	g_mesh.draw(g_cam.viewMat, g_cam.projMat, pointLightPositions, ambientValues, diffuseValues, specularValues, coeffValues, g_time, vec3(3.0, 2.0, 0.0), vec3(0.5, 0.5, 0.5), vec3(g_cam.eye.x, g_cam.eye.y, g_cam.eye.z));
+	g_mesh.draw(g_cam.viewMat, g_cam.projMat, lights, vec3(0.0, 2.0, 0.0), vec3(0.5, 0.5, 0.5), vec3(g_cam.eye.x, g_cam.eye.y, g_cam.eye.z));
+	g_mesh.draw(g_cam.viewMat, g_cam.projMat, lights, vec3(3.0, 2.0, 0.0), vec3(0.5, 0.5, 0.5), vec3(g_cam.eye.x, g_cam.eye.y, g_cam.eye.z));
 
 
 	

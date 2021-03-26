@@ -47,6 +47,9 @@
     <ClInclude Include="src\Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\PointLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\test.vert" />

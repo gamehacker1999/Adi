@@ -273,3 +273,59 @@ void Mesh::draw(mat4 viewMat, mat4 projMat, vec3 lightPositions[], vec3 ambientV
 
 	glPopMatrix();
 }
+
+void Mesh::draw(mat4 viewMat, mat4 projMat, PointLight lights[], vec3 translation, vec3 scaleVal, vec3 eyePos)
+{
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+
+	if (vert_num <= 0 && tri_num <= 0)
+		return;
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_CULL_FACE);
+	glPolygonMode(GL_FRONT, GL_FILL);
+
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+
+
+	glUseProgram(shaderProg.id);
+	mat4 m = translate(mat4(1.0), translation);
+	modelMat = scale(m, scaleVal);
+	shaderProg.setMatrix4fv("modelMat", 1, value_ptr(modelMat));
+	shaderProg.setMatrix4fv("viewMat", 1, value_ptr(viewMat));
+	shaderProg.setMatrix4fv("projMat", 1, value_ptr(projMat));
+	shaderProg.setFloat3V("pointLights[0].position", 1, value_ptr(lights[0].position));
+	shaderProg.setFloat3V("pointLights[1].position", 1, value_ptr(lights[1].position));
+
+	shaderProg.setFloat3V("pointLights[0].ambient", 1, value_ptr(lights[0].ambient));
+	shaderProg.setFloat3V("pointLights[1].ambient", 1, value_ptr(lights[1].ambient));
+
+	shaderProg.setFloat3V("pointLights[0].diffuse", 1, value_ptr(lights[0].diffuse));
+	shaderProg.setFloat3V("pointLights[1].diffuse", 1, value_ptr(lights[1].diffuse));
+
+	shaderProg.setFloat3V("pointLights[0].specular", 1, value_ptr(lights[0].specular));
+	shaderProg.setFloat3V("pointLights[1].specular", 1, value_ptr(lights[1].specular));
+
+	shaderProg.setInt("pointLights[0].coeff", lights[0].coeff);
+	shaderProg.setInt("pointLights[1].coeff", lights[1].coeff);
+
+	shaderProg.setFloat3V("eyePos", 1, value_ptr(eyePos));
+	shaderProg.setFloat("time", 0);
+	shaderProg.setFloat("offset", normal_offset);
+
+	//cout << glm::to_string(modelMat) << endl;
+	//cout << glm::to_string(viewMat) << endl;
+	//cout << glm::to_string(projMat) << endl;
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glDrawElements(GL_TRIANGLES, tri_num * 3, GL_UNSIGNED_INT, NULL);
+
+	glPopMatrix();
+	glDisable(GL_POLYGON_OFFSET_FILL);
+
+	glPopMatrix();
+}
