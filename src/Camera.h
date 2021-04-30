@@ -1,6 +1,5 @@
 #pragma once
 #define GLM_FORCE_RADIANS
-#define GLM_SWIZZLE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -14,13 +13,15 @@ public:
     vec4			eye;
     vec4			lookat;
 
-	mat4			viewMat;
+	mat4			mvMat;
     mat4			projMat;
+	float           near_plane;
+	float           fovy;
 
 private:
-    float           fovy;              // view angle 
+                 // view angle 
     float           aspect;            // the window ration equal to w/h
-    float           near_plane;
+    
     float           far_plane;
 
     vec4			axis_n;            //eye-lookat
@@ -64,8 +65,8 @@ public:
              int winW, int winH,
 			 float p_angle = 45.0f, float p_near =0.1f, float p_far=10000.0f);
 
-    void setProjectionMatrix(int winW, int winH);
-    void setViewMatrix();
+    void setProj(int winW, int winH);
+    void setModelView();
     void mouseClick(int button, int state, int x, int y, int winW ,int winH);
     void mouseMotion(int x, int y, int winW, int winH);
     void keyOperation(const unsigned char keyStates[], int winW, int winH);
@@ -75,20 +76,26 @@ public:
 	bool isFocusMode();
 	bool isFPMode();
 
-	// focus cam mode 
+	// third person model 
 	void CameraRotate();
 	void CameraZoom();
 	void CameraPan();
 
-	// first-person cam mode
+	// first person model
 	void CameraPan_fp();
 	void CameraRotate_fp(int winW, int winH);
+
+	void CameraAutoFocus(float new_lookat_x, float new_lookat_y, float new_lookat_z);
 
     void drawGrid();
     void drawCoordinate();
     void drawCoordinateOnScreen(int winW, int winH);
 
+	void DrawCam(float pScaleX, float pScaleY, float pScaleZ);
 	void drawFrustum();
+
+	// function to see if camera is changed
+	bool IsChanged();
 
 private: 
     void horizontalRotate();    // for focus cam mode
